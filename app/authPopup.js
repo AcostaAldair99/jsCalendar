@@ -2,6 +2,8 @@
 // configuration parameters are located at authConfig.js
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
+
+
 let username = "";
 
 function selectAccount() {
@@ -122,5 +124,19 @@ function readCalendar(){
         console.error(error);
     });
 }
+
+function sendWarningCalendar(resDays,status){
+    var content={"message":{"subject":"TAREA PENDIENTE","body":{"contentType":"Text","content":"Tienes una tarea pendiente, la cual se vence en "+resDays+" Dias","contentType":"Text","content":"Status: "+status,"style": {  
+        "color":  "#006666",  
+        "padding-left": "14px"
+      }},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
+    getTokenPopup(tokenRequest)
+    .then(response=>{
+        sendMSGraph(graphConfig.graphSendMailEndPoint,response.accessToken,updateUI,content);
+    }).catch(error=>{
+        console.error(error);
+    });
+}
+
 
 selectAccount();

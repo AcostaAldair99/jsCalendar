@@ -11,11 +11,8 @@ const queryDate="https://graph.microsoft.com/v1.0/me/calendarview?startdatetime=
 const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
     graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages",
-    graphCalendarEndpoint:queryDate
+    graphCalendarEndpoint:queryDate,
+    graphSendMailEndPoint:"https://graph.microsoft.com/v1.0/me/sendMail"
 }
-//2022-11-16T07:15:50.289Z
-//2022-11-23T07:15:50.289Z
 
 
-//2022-11-16T06:41:58.648Z
-//2022-11-23T06:41:58.648Z

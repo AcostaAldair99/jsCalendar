@@ -1,3 +1,5 @@
+
+
 const formatDate = (date) => {
     let d = new Date(date);
     let month = (d.getMonth() + 1).toString();
@@ -20,21 +22,31 @@ const diffDates=(date1,date2)=>{
     return Math.round(Difference_In_Days)
 }
 
-const setStatus=(days)=>{
+const setStatus=(days,status)=>{
     p=document.createElement("a");
-    if(days==0){
-        p.setAttribute("class","btn btn-secondary");
-        p.innerHTML="VENCIDA";
-    }else if(days<=3){
-        p.setAttribute("class","btn btn-danger");
-        p.innerHTML="ROJO";
-    }else if(days>3 && days<7){
-        p.setAttribute("class","btn btn-warning");
-        p.innerHTML="AMARILLO";
-    }else if(days>7){
-        p.setAttribute("class","btn btn-success");        
-        p.innerHTML="VERDE";
-    }
+    //if(status=="notResponded"){
+        if(days==0){
+            p.setAttribute("class","btn btn-secondary");
+            p.innerHTML="VENCIDA";
+        }else if(days<=3){
+            p.setAttribute("class","btn btn-danger");
+            p.innerHTML="ROJO";
+            sendWarningCalendar(days,"ROJO");
+        }else if(days>3 && days<7){
+            p.setAttribute("class","btn btn-warning");
+            p.innerHTML="AMARILLO";
+            sendWarningCalendar(days,"AMARILLO");
+        }else if(days>7){
+            p.setAttribute("class","btn btn-success");        
+            p.innerHTML="VERDE";
+            sendWarningCalendar(days,"VERDE");
+        }
+        
+    //}else{
+       // p.setAttribute("class","btn btn-primary");        
+         //   p.innerHTML="TERMINADA";
+    //}
+    
     return p;
 }
 
@@ -52,7 +64,7 @@ function showWelcomeMessage(username) {
     cardDiv.style.display = 'initial';
     welcomeDiv.innerHTML = `Welcome ${username}`;
     signInButton.setAttribute("onclick", "signOut();");
-    signInButton.setAttribute('class', "btn btn-success")
+    signInButton.setAttribute('class', "btn btn-danger")
     signInButton.innerHTML = "Sign Out";
 }
 
@@ -104,6 +116,7 @@ function updateUI(data, endpoint) {
                     contentItem.setAttribute("aria-labelledby", "list" + i + "list")
                     contentItem.innerHTML = "<strong> from: " + d.from.emailAddress.address + "</strong><br><br>" + d.bodyPreview + "...";
                     tabContent.appendChild(contentItem);
+
                 }
             });
         }
@@ -125,7 +138,7 @@ function updateUI(data, endpoint) {
                     tde.innerHTML=formatDate(d.end.dateTime);
                     var tdday=document.createElement("td");
                     tdday.innerHTML=diffDates(d.start.dateTime,d.end.dateTime);
-                    var p=setStatus(diffDates(d.start.dateTime,d.end.dateTime));
+                    var p=setStatus(diffDates(d.start.dateTime,d.end.dateTime),d.responseStatus.response);
                     var tstatus=document.createElement("td");
                     tstatus.appendChild(p);
 
@@ -136,34 +149,18 @@ function updateUI(data, endpoint) {
                     tr.appendChild(tdday)
                     tr.appendChild(tstatus);
                     tbody.appendChild(tr);
-                    
-                    /*const listItem = document.createElement("a");
-                    listItem.setAttribute("class", "list-group-item list-group-item-action")
-                    listItem.setAttribute("id", "list" + i + "list")
-                    listItem.setAttribute("data-toggle", "list")
-                    listItem.setAttribute("href", "#list" + i)
-                    listItem.setAttribute("role", "tab")
-                    listItem.setAttribute("aria-controls", i)
-                    listItem.innerHTML = d.subject+" - "+formatDate(d.start.dateTime)+" | "+formatDate(d.end.dateTime);
-                    list.appendChild(listItem)
+                    console.log(d.responseStatus.response);
 
-                    
-                    const listItemEnd = document.createElement("a");
-                    listItemEnd.setAttribute("class", "list-group-item list-group-item-action")
-                    listItemEnd.setAttribute("id", "list" + i + "list")
-                    listItemEnd.setAttribute("data-toggle", "list")
-                    listItemEnd.setAttribute("href", "#list" + i)
-                    listItemEnd.setAttribute("role", "tab")
-                    listItemEnd.setAttribute("aria-controls", i)
-                    listItemEnd.innerHTML = formatDate(d.end.dateTime);
-                    endlist.appendChild(listItemEnd)
-                    console.log("start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
-                    */
-                    console.log("Subject: "+d.subject+" start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
-
+                    //console.log("Subject: "+d.subject+" start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
+                   /* d.attendees.map((c,j)=>{
+                        //console.log(c.emailAddress.name);
+                        console.log(c.emailAddress.address);
+                    });*/
                 }
                 
             });
+    }else if(endpoint==graphConfig.graphSendMailEndPoint){
+        alert("EMAIL ENVIADO !");
     }
 }
 

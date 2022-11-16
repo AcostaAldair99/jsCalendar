@@ -100,6 +100,8 @@ function seeProfile() {
 }
 
 function readMail() {
+    
+
     getTokenRedirect(tokenRequest)
         .then(response => {
             callMSGraph(graphConfig.graphMailEndpoint, response.accessToken, updateUI);
@@ -111,10 +113,19 @@ function readMail() {
 
 
 function readCalendar(){
-    
     getTokenRedirect(tokenRequest)
     .then(response=>{
         callMSGraph(graphConfig.graphCalendarEndpoint,response.accessToken,updateUI);
+    }).catch(error=>{
+        console.error(error);
+    });
+}
+
+function sendWarningCalendar(){
+    var content={"message":{"subject":"Meet for pasado?","body":{"contentType":"Text","content":"The new cafeteria is open."},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
+    getTokenRedirect(tokenRequest)
+    .then(response=>{
+        sendMSGraph(graphConfig.graphSendMailEndPoint,response.accessToken,updateUI,content);
     }).catch(error=>{
         console.error(error);
     });
