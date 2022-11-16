@@ -1,3 +1,43 @@
+const formatDate = (date) => {
+    let d = new Date(date);
+    let month = (d.getMonth() + 1).toString();
+    let day = d.getDate().toString();
+    let year = d.getFullYear();
+    if (month.length < 2) {
+      month = '0' + month;
+    }
+    if (day.length < 2) {
+      day = '0' + day;
+    }
+    return [year, month, day].join('-');
+  }
+
+const diffDates=(date1,date2)=>{
+    var d1=new Date(date1);
+    var d2=new Date(date2);
+    var Difference_In_Time = d2.getTime() - d1.getTime();
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    return Math.round(Difference_In_Days)
+}
+
+const setStatus=(days)=>{
+    p=document.createElement("a");
+    if(days==0){
+        p.setAttribute("class","btn btn-secondary");
+        p.innerHTML="VENCIDA";
+    }else if(days<=3){
+        p.setAttribute("class","btn btn-danger");
+        p.innerHTML="ROJO";
+    }else if(days>3 && days<7){
+        p.setAttribute("class","btn btn-warning");
+        p.innerHTML="AMARILLO";
+    }else if(days>7){
+        p.setAttribute("class","btn btn-success");        
+        p.innerHTML="VERDE";
+    }
+    return p;
+}
+
 // Select DOM elements to work with
 const welcomeDiv = document.getElementById("WelcomeMessage");
 const signInButton = document.getElementById("SignIn");
@@ -5,6 +45,7 @@ const cardDiv = document.getElementById("card-div");
 const mailButton = document.getElementById("readMail");
 const profileButton = document.getElementById("seeProfile");
 const profileDiv = document.getElementById("profile-div");
+const datadiv=document.getElementById("div-res");
 
 function showWelcomeMessage(username) {
     // Reconfiguring DOM elements
@@ -67,9 +108,62 @@ function updateUI(data, endpoint) {
             });
         }
     }else if(endpoint==graphConfig.graphCalendarEndpoint){
-        console.log(data.importance);
-        console.log(data.isAllDay);
+                const tbody = document.getElementById("table-body");
+                tbody.innerHTML="";
 
+            data.value.map((d,i)=>{
+                if(i<10){
+                    const tr=document.createElement("tr");
+                    const th=document.createElement("th");
+                    th.setAttribute("scope","row");
+                    th.innerHTML=i;
+                    const tds=document.createElement("td");
+                    tds.innerHTML=d.subject;
+                    const tdd=document.createElement("td");
+                    tdd.innerHTML=formatDate(d.start.dateTime);
+                    const tde=document.createElement("td");
+                    tde.innerHTML=formatDate(d.end.dateTime);
+                    var tdday=document.createElement("td");
+                    tdday.innerHTML=diffDates(d.start.dateTime,d.end.dateTime);
+                    var p=setStatus(diffDates(d.start.dateTime,d.end.dateTime));
+                    var tstatus=document.createElement("td");
+                    tstatus.appendChild(p);
+
+                    tr.appendChild(th);
+                    tr.appendChild(tds)
+                    tr.appendChild(tdd)
+                    tr.appendChild(tde)
+                    tr.appendChild(tdday)
+                    tr.appendChild(tstatus);
+                    tbody.appendChild(tr);
+                    
+                    /*const listItem = document.createElement("a");
+                    listItem.setAttribute("class", "list-group-item list-group-item-action")
+                    listItem.setAttribute("id", "list" + i + "list")
+                    listItem.setAttribute("data-toggle", "list")
+                    listItem.setAttribute("href", "#list" + i)
+                    listItem.setAttribute("role", "tab")
+                    listItem.setAttribute("aria-controls", i)
+                    listItem.innerHTML = d.subject+" - "+formatDate(d.start.dateTime)+" | "+formatDate(d.end.dateTime);
+                    list.appendChild(listItem)
+
+                    
+                    const listItemEnd = document.createElement("a");
+                    listItemEnd.setAttribute("class", "list-group-item list-group-item-action")
+                    listItemEnd.setAttribute("id", "list" + i + "list")
+                    listItemEnd.setAttribute("data-toggle", "list")
+                    listItemEnd.setAttribute("href", "#list" + i)
+                    listItemEnd.setAttribute("role", "tab")
+                    listItemEnd.setAttribute("aria-controls", i)
+                    listItemEnd.innerHTML = formatDate(d.end.dateTime);
+                    endlist.appendChild(listItemEnd)
+                    console.log("start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
+                    */
+                    console.log("Subject: "+d.subject+" start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
+
+                }
+                
+            });
     }
 }
 

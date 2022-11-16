@@ -4,6 +4,7 @@ const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
 let username = "";
 
+
 /**
  * A promise handler needs to be registered for handling the
  * response returned from redirect flow. For more information, visit:
@@ -89,6 +90,7 @@ function getTokenRedirect(request) {
 }
 
 function seeProfile() {
+    console.log(graphConfig.graphMeEndpoint);
     getTokenRedirect(loginRequest)
         .then(response => {
             callMSGraph(graphConfig.graphMeEndpoint, response.accessToken, updateUI);
@@ -104,4 +106,16 @@ function readMail() {
         }).catch(error => {
             console.error(error);
         });
+}
+
+
+
+function readCalendar(){
+    
+    getTokenRedirect(tokenRequest)
+    .then(response=>{
+        callMSGraph(graphConfig.graphCalendarEndpoint,response.accessToken,updateUI);
+    }).catch(error=>{
+        console.error(error);
+    });
 }

@@ -95,6 +95,7 @@ function getTokenPopup(request) {
 }
 
 function seeProfile() {
+    console.log(graphConfig.graphMeEndpoint);
     getTokenPopup(loginRequest)
         .then(response => {
             callMSGraph(graphConfig.graphMeEndpoint, response.accessToken, updateUI);
@@ -119,7 +120,7 @@ function readCalendar(){
         callMSGraph(graphConfig.graphCalendarEndpoint,response.accessToken,updateUI);
     }).catch(error=>{
         console.error(error);
-    })
+    });
 }
 
 selectAccount();

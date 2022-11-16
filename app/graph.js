@@ -7,7 +7,7 @@ function callMSGraph(endpoint, token, callback) {
     const bearer = `Bearer ${token}`;
 
     headers.append("Authorization", bearer);
-
+    headers.append("Prefer",'outlook.timezone="Etc/GMT+12"');
     const options = {
         method: "GET",
         headers: headers
@@ -19,4 +19,6 @@ function callMSGraph(endpoint, token, callback) {
         .then(response => response.json())
         .then(response => callback(response, endpoint))
         .catch(error => console.log(error));
+
+        
 }
