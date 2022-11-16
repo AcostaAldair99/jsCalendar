@@ -1,6 +1,6 @@
 function exportToExcel(){
     var tableid=document.getElementById("events_Content").id;
-    htmlTableToExcel(tableid,filename='descarga');
+    htmlTableToExcel(tableid,filename='Reporte_Acts -'+new Date());
 }
 
 var htmlTableToExcel=function(tableId,filename=''){
