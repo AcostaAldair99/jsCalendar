@@ -1,3 +1,27 @@
+function exportToExcel(){
+    var tableid=document.getElementById("events_Content").id;
+    htmlTableToExcel(tableid,filename='descarga');
+}
+
+var htmlTableToExcel=function(tableId,filename=''){
+    var excelFilename='Reporte_de_Eventos';
+    var TableDataType='application/vnd.ms-excel';
+    var selectTable=document.getElementById(tableId);
+    var htmlTable=selectTable.outerHTML.replace(/ /g,'%20');
+
+    filename=filename?filename+'.xls':excelFilename+'.xls';
+    var excelFileURL=document.createElement("a");
+    document.body.appendChild(excelFileURL);
+
+    if(navigator.msSaveOrOpenBlob){
+        var blob=new Blob(['\ufeff',htmlTable],{type:TableDataType});
+        navigator.msSaveOrOpenBlob(blob,filename);
+    }else{
+        excelFileURL.href = 'data:' + TableDataType + ', ' + htmlTable;
+        excelFileURL.download = filename;
+        excelFileURL.click();
+    }
+}
 
 
 const formatDate = (date) => {
@@ -141,26 +165,27 @@ function updateUI(data, endpoint) {
                     var p=setStatus(diffDates(d.start.dateTime,d.end.dateTime),d.responseStatus.response);
                     var tstatus=document.createElement("td");
                     tstatus.appendChild(p);
-
+                    var tdo=document.createElement("td");
+                    //tdo.innerHTML(d.attendees.emailAddress.address[0])
                     tr.appendChild(th);
-                    tr.appendChild(tds)
-                    tr.appendChild(tdd)
-                    tr.appendChild(tde)
-                    tr.appendChild(tdday)
+                    tr.appendChild(tds);
+                    tr.appendChild(tdd);
+                    tr.appendChild(tde);
+                    tr.appendChild(tdday);
                     tr.appendChild(tstatus);
+                    tr.appendChild(tdo);
                     tbody.appendChild(tr);
                     console.log(d.responseStatus.response);
 
                     //console.log("Subject: "+d.subject+" start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
-                   /* d.attendees.map((c,j)=>{
+                  // d.attendees.map((c,j)=>{
                         //console.log(c.emailAddress.name);
-                        console.log(c.emailAddress.address);
-                    });*/
+                    //    console.log(j);
+                    //}); 
                 }
                 
             });
     }else if(endpoint==graphConfig.graphSendMailEndPoint){
-        alert("EMAIL ENVIADO !");
     }
 }
 

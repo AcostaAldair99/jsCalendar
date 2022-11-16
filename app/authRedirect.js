@@ -121,8 +121,8 @@ function readCalendar(){
     });
 }
 
-function sendWarningCalendar(){
-    var content={"message":{"subject":"Meet for pasado?","body":{"contentType":"Text","content":"The new cafeteria is open."},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
+function sendWarningCalendar(resDays,status){
+    var content={"message":{"subject":"TAREA PENDIENTE !","body":{"contentType":"Text","content":"Tienes una tarea pendiente, la cual se vence en "+resDays+" Dias | Status: "+status},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
     getTokenRedirect(tokenRequest)
     .then(response=>{
         sendMSGraph(graphConfig.graphSendMailEndPoint,response.accessToken,updateUI,content);

@@ -126,10 +126,7 @@ function readCalendar(){
 }
 
 function sendWarningCalendar(resDays,status){
-    var content={"message":{"subject":"TAREA PENDIENTE","body":{"contentType":"Text","content":"Tienes una tarea pendiente, la cual se vence en "+resDays+" Dias","contentType":"Text","content":"Status: "+status,"style": {  
-        "color":  "#006666",  
-        "padding-left": "14px"
-      }},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
+    var content={"message":{"subject":"TAREA PENDIENTE !","body":{"contentType":"Text","content":"Tienes una tarea pendiente, la cual se vence en "+resDays+" Dias | Status: "+status},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
     getTokenPopup(tokenRequest)
     .then(response=>{
         sendMSGraph(graphConfig.graphSendMailEndPoint,response.accessToken,updateUI,content);

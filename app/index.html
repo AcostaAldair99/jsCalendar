@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
   <title>Microsoft identity platform</title>
   <style>
     html, body {
@@ -51,10 +52,10 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-primary" onclick="sendWarningCalendar()">SEND EMAIL</button>
+  <button class="btn btn-primary m-3 p-2" onclick="exportToExcel()">Export to Excel</button>
 
 <div class="row p-5">
-    <table class="table">
+    <table class="table" id="events_Content">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -63,6 +64,7 @@
           <th scope="col">End Date</th>
           <th scope="col">Difference</th>
           <th scope="col">Status</th>
+          <th scope="col">Organizer</th>
 
         </tr>
       </thead>
