@@ -32,6 +32,8 @@
   "homepage": "https://github.com/Azure-Samples/ms-identity-javascript-v2#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "fullcalendar": "^5.11.3",
+    "fullcalendar-scheduler": "^5.11.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

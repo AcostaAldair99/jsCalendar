@@ -100,8 +100,6 @@ function seeProfile() {
 }
 
 function readMail() {
-    
-
     getTokenRedirect(tokenRequest)
         .then(response => {
             callMSGraph(graphConfig.graphMailEndpoint, response.accessToken, updateUI);
@@ -112,10 +110,10 @@ function readMail() {
 
 
 
-function readCalendar(){
+function readTasks(){
     getTokenRedirect(tokenRequest)
     .then(response=>{
-        callMSGraph(graphConfig.graphCalendarEndpoint,response.accessToken,updateUI);
+        callMSGraph(graphConfig.graphTaskEndPoint,response.accessToken,updateUI);
     }).catch(error=>{
         console.error(error);
     });
@@ -129,4 +127,18 @@ function sendWarningCalendar(resDays,status){
     }).catch(error=>{
         console.error(error);
     });
+}
+
+function setEvent(){
+    var date=document.getElementById("datePicker");
+    var emails=document.getElementById("inputEmail");
+    let content;
+
+    /*
+    getTokenPopup(tokenRequest)
+    .then(response=>{
+        sendMSGraph(graphConfig.graphSetEvent,response.accessToken,updateUI,content);
+    }).catch(error=>{
+        console.error(error);
+    });*/
 }

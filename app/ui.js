@@ -1,5 +1,27 @@
+document.addEventListener("DOMContentLoaded",function(){
+    readTasks();
+    form.addEventListener('submit',function(e){
+            e.preventDefault();
+            const taskName=document.getElementById("titleTask").value;
+            const dateInput=document.getElementById("endDate").value;
+            if(taskName=='' || dateInput==''){
+                Swal.fire({
+                    title: 'Advertencia !',
+                    text: 'Debes Ingresar los datos completos',
+                    icon: 'warning',
+                  });
+            }else{
+                console.log(taskName+" - "+dateInput);
+        
+            }
+    });
+
+});
+
+
+
 function exportToExcel(){
-    var tableid=document.getElementById("events_Content").id;
+    var tableid=document.getElementById("table-body").id;
     htmlTableToExcel(tableid,filename='Reporte_Acts -'+new Date());
 }
 
@@ -46,32 +68,20 @@ const diffDates=(date1,date2)=>{
     return Math.round(Difference_In_Days)
 }
 
-const setStatus=(days,status)=>{
-    p=document.createElement("a");
-    //if(status=="notResponded"){
-        if(days==0){
-            p.setAttribute("class","btn btn-secondary");
-            p.innerHTML="VENCIDA";
-        }else if(days<=3){
-            p.setAttribute("class","btn btn-danger");
-            p.innerHTML="ROJO";
-            sendWarningCalendar(days,"ROJO");
-        }else if(days>3 && days<7){
-            p.setAttribute("class","btn btn-warning");
-            p.innerHTML="AMARILLO";
-            sendWarningCalendar(days,"AMARILLO");
-        }else if(days>7){
-            p.setAttribute("class","btn btn-success");        
-            p.innerHTML="VERDE";
-            sendWarningCalendar(days,"VERDE");
-        }
+const setStatus=(days)=>{
         
-    //}else{
-       // p.setAttribute("class","btn btn-primary");        
-         //   p.innerHTML="TERMINADA";
-    //}
-    
-    return p;
+        let color=null;
+        if(days==0){
+            color="";
+        }else if(days<=3){
+            color="red";
+        }else if(days>3 && days<7){
+            color="yellow";
+        }else if(days>7){
+            console.log(days);
+            color="green";
+        }
+    return color;
 }
 
 // Select DOM elements to work with
@@ -90,7 +100,11 @@ function showWelcomeMessage(username) {
     signInButton.setAttribute("onclick", "signOut();");
     signInButton.setAttribute('class', "btn btn-danger")
     signInButton.innerHTML = "Sign Out";
+    let mainDiv=document.getElementById("main");
+    mainDiv.style.display='block';
 }
+
+
 
 function updateUI(data, endpoint) {
     console.log('Graph API responded at: ' + new Date().toString());
@@ -110,82 +124,38 @@ function updateUI(data, endpoint) {
         profileDiv.appendChild(phone);
         profileDiv.appendChild(address);
 
-    } else if (endpoint === graphConfig.graphMailEndpoint) {
-        if (!data.value) {
-            alert("You do not have a mailbox!")
-        } else if (data.value.length < 1) {
-            alert("Your mailbox is empty!")
-        } else {
-            const tabContent = document.getElementById("nav-tabContent");
-            const tabList = document.getElementById("list-tab");
-            tabList.innerHTML = ''; // clear tabList at each readMail call
+    } else if (endpoint === graphConfig.graphTaskEndPoint) {
+        const inputs=[];
+        const template={"id":null,"title":null,"start":null,"color":null};
+        data.value.map((d,i)=>{
+            template.id=i+10000;
+            template.title=d.title;
+            template.start=formatDate(d.dueDateTime);
+            template.color=setStatus(diffDates(new Date(),d.dueDateTime));
+            inputs.push(template);
+        });
+            
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale:'es',
+        headerToolbar:{
+        left:'prev, next, today',
+        center:'title',
+        right:'dayGridMonth,timeGridWeek,listWeek'
+         },
+        });
+        data.value.map((d,i)=>{
+            template.id=i+10000;
+            template.title=d.title;
+            template.start=formatDate(d.dueDateTime);
+            template.color=setStatus(diffDates(new Date(),d.dueDateTime));
+            console.log(d);
+            calendar.addEvent(template)
+        });
 
-            data.value.map((d, i) => {
-                // Keeping it simple
-                if (i < 10) {
-                    const listItem = document.createElement("a");
-                    listItem.setAttribute("class", "list-group-item list-group-item-action")
-                    listItem.setAttribute("id", "list" + i + "list")
-                    listItem.setAttribute("data-toggle", "list")
-                    listItem.setAttribute("href", "#list" + i)
-                    listItem.setAttribute("role", "tab")
-                    listItem.setAttribute("aria-controls", i)
-                    listItem.innerHTML = d.subject;
-                    tabList.appendChild(listItem)
-
-                    const contentItem = document.createElement("div");
-                    contentItem.setAttribute("class", "tab-pane fade")
-                    contentItem.setAttribute("id", "list" + i)
-                    contentItem.setAttribute("role", "tabpanel")
-                    contentItem.setAttribute("aria-labelledby", "list" + i + "list")
-                    contentItem.innerHTML = "<strong> from: " + d.from.emailAddress.address + "</strong><br><br>" + d.bodyPreview + "...";
-                    tabContent.appendChild(contentItem);
-
-                }
-            });
-        }
-    }else if(endpoint==graphConfig.graphCalendarEndpoint){
-                const tbody = document.getElementById("table-body");
-                tbody.innerHTML="";
-
-            data.value.map((d,i)=>{
-                if(i<10){
-                    const tr=document.createElement("tr");
-                    const th=document.createElement("th");
-                    th.setAttribute("scope","row");
-                    th.innerHTML=i;
-                    const tds=document.createElement("td");
-                    tds.innerHTML=d.subject;
-                    const tdd=document.createElement("td");
-                    tdd.innerHTML=formatDate(d.start.dateTime);
-                    const tde=document.createElement("td");
-                    tde.innerHTML=formatDate(d.end.dateTime);
-                    var tdday=document.createElement("td");
-                    tdday.innerHTML=diffDates(d.start.dateTime,d.end.dateTime);
-                    var p=setStatus(diffDates(d.start.dateTime,d.end.dateTime),d.responseStatus.response);
-                    var tstatus=document.createElement("td");
-                    tstatus.appendChild(p);
-                    var tdo=document.createElement("td");
-                    //tdo.innerHTML(d.attendees.emailAddress.address[0])
-                    tr.appendChild(th);
-                    tr.appendChild(tds);
-                    tr.appendChild(tdd);
-                    tr.appendChild(tde);
-                    tr.appendChild(tdday);
-                    tr.appendChild(tstatus);
-                    tr.appendChild(tdo);
-                    tbody.appendChild(tr);
-                    console.log(d.responseStatus.response);
-
-                    //console.log("Subject: "+d.subject+" start Date: "+formatDate(d.start.dateTime)+" end date: "+formatDate(d.end.dateTime));
-                  // d.attendees.map((c,j)=>{
-                        //console.log(c.emailAddress.name);
-                    //    console.log(j);
-                    //}); 
-                }
-                
-            });
-    }else if(endpoint==graphConfig.graphSendMailEndPoint){
+        calendar.render(); 
+        
     }
 }
 
