@@ -98,7 +98,7 @@ function seeProfile() {
             console.error(error);
         });
 }
-
+/*
 function readMail() {
     getTokenRedirect(tokenRequest)
         .then(response => {
@@ -106,9 +106,7 @@ function readMail() {
         }).catch(error => {
             console.error(error);
         });
-}
-
-
+}*/
 
 function readTasks(){
     getTokenRedirect(tokenRequest)
@@ -118,7 +116,7 @@ function readTasks(){
         console.error(error);
     });
 }
-
+/*
 function sendWarningCalendar(resDays,status){
     var content={"message":{"subject":"TAREA PENDIENTE !","body":{"contentType":"Text","content":"Tienes una tarea pendiente, la cual se vence en "+resDays+" Dias | Status: "+status},"toRecipients":[{"emailAddress":{"address":"aldair.acostafm@gmail.com"}}]}}
     getTokenRedirect(tokenRequest)
@@ -128,7 +126,7 @@ function sendWarningCalendar(resDays,status){
         console.error(error);
     });
 }
-
+*/
 function setEvent(){
     var date=document.getElementById("datePicker");
     var emails=document.getElementById("inputEmail");

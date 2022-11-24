@@ -1,0 +1,13 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+footer {
+    position: fixed;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+    z-index: 9999;
+}

@@ -1,27 +1,11 @@
+//import {insert} from "dataBase.js";
 document.addEventListener("DOMContentLoaded",function(){
     readTasks();
-    form.addEventListener('submit',function(e){
-            e.preventDefault();
-            const taskName=document.getElementById("titleTask").value;
-            const dateInput=document.getElementById("endDate").value;
-            if(taskName=='' || dateInput==''){
-                Swal.fire({
-                    title: 'Advertencia !',
-                    text: 'Debes Ingresar los datos completos',
-                    icon: 'warning',
-                  });
-            }else{
-                console.log(taskName+" - "+dateInput);
-        
-            }
-    });
-
 });
 
 
-
 function exportToExcel(){
-    var tableid=document.getElementById("table-body").id;
+    var tableid=document.getElementById("calendar").id;
     htmlTableToExcel(tableid,filename='Reporte_Acts -'+new Date());
 }
 
@@ -68,18 +52,17 @@ const diffDates=(date1,date2)=>{
     return Math.round(Difference_In_Days)
 }
 
+
 const setStatus=(days)=>{
-        
-        let color=null;
-        if(days==0){
-            color="";
-        }else if(days<=3){
-            color="red";
-        }else if(days>3 && days<7){
-            color="yellow";
-        }else if(days>7){
-            console.log(days);
-            color="green";
+    let color='';
+        if(days<0){
+            color="gray";
+        }else if(days<3){
+            color='red';
+        }else if(days>=3 && days<7){
+            color='orange';
+        }else if(days>=7){
+            color='green';
         }
     return color;
 }
@@ -102,40 +85,30 @@ function showWelcomeMessage(username) {
     signInButton.innerHTML = "Sign Out";
     let mainDiv=document.getElementById("main");
     mainDiv.style.display='block';
+    let img=document.getElementById("wallpaper");
+    img.style.display='none';
 }
+
+
+
 
 
 
 function updateUI(data, endpoint) {
     console.log('Graph API responded at: ' + new Date().toString());
-
-    if (endpoint === graphConfig.graphMeEndpoint) {
-        profileDiv.innerHTML = ''
-        const title = document.createElement('p');
-        title.innerHTML = "<strong>Title: </strong>" + data.jobTitle;
-        const email = document.createElement('p');
-        email.innerHTML = "<strong>Mail: </strong>" + data.mail;
-        const phone = document.createElement('p');
-        phone.innerHTML = "<strong>Phone: </strong>" + data.businessPhones[0];
-        const address = document.createElement('p');
-        address.innerHTML = "<strong>Location: </strong>" + data.officeLocation;
-        profileDiv.appendChild(title);
-        profileDiv.appendChild(email);
-        profileDiv.appendChild(phone);
-        profileDiv.appendChild(address);
-
-    } else if (endpoint === graphConfig.graphTaskEndPoint) {
+    if(endpoint === graphConfig.graphTaskEndPoint) {
         const inputs=[];
-        const template={"id":null,"title":null,"start":null,"color":null};
+        const template={"id":null,"title":null,"start":null,"color":null,"assign":[]};
         data.value.map((d,i)=>{
             template.id=i+10000;
             template.title=d.title;
             template.start=formatDate(d.dueDateTime);
             template.color=setStatus(diffDates(new Date(),d.dueDateTime));
+        
             inputs.push(template);
         });
             
-        var calendarEl = document.getElementById('calendar');
+        /*var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale:'es',
@@ -150,14 +123,10 @@ function updateUI(data, endpoint) {
             template.title=d.title;
             template.start=formatDate(d.dueDateTime);
             template.color=setStatus(diffDates(new Date(),d.dueDateTime));
-            console.log(d);
-            calendar.addEvent(template)
+            calendar.addEvent(template);
         });
 
-        calendar.render(); 
+        calendar.render();*/
         
     }
 }
-
-
-
