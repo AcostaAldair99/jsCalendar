@@ -108,7 +108,7 @@ function updateUI(data, endpoint) {
             inputs.push(template);
         });
             
-        /*var calendarEl = document.getElementById('calendar');
+        var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale:'es',
@@ -126,7 +126,7 @@ function updateUI(data, endpoint) {
             calendar.addEvent(template);
         });
 
-        calendar.render();*/
+        calendar.render();
         
     }
 }
